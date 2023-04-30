@@ -1,4 +1,4 @@
-from src.crypto import crypto_hash
+from src.crypto import crypto_hash, hex_to_binary
 
 
 def test_crypto_hash():
@@ -7,3 +7,11 @@ def test_crypto_hash():
     assert crypto_hash("foo") == crypto_hash("foo")
     assert crypto_hash("foo") != crypto_hash("bar")
     assert crypto_hash(1, [2], "three") == crypto_hash("three", 1, [2])
+
+
+def test_hex_to_binary():
+    n = 123456789
+    h = hex(n)[2:]
+    b = hex_to_binary(h)
+
+    assert int(b, 2) == n
