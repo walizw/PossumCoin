@@ -8,6 +8,8 @@ def test_block_mine():
 
     assert isinstance(block, Block)
     assert block.data == data
+    assert block.previous_hash == last_block.hash
+    assert block.hash[0:block.difficulty] == '0' * block.difficulty
 
 
 def test_chain_instance():
