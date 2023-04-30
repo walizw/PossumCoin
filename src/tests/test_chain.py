@@ -1,4 +1,7 @@
 from src.blockchain import Chain, Block, GENESIS_BLOCK
+from src.config import MINE_RATE, SECONDS
+
+import time
 
 
 def test_block_mine():
@@ -27,3 +30,34 @@ def test_chain_add_block():
 
     assert chain.chain[-1].data == data
     assert chain.chain[-1].previous_hash == chain.chain[-2].hash
+
+
+def test_quickly_mined_block():
+    last_block = Block.mine(GENESIS_BLOCK, "foo")
+    mined_block = Block.mine(last_block, "bar")
+
+    assert mined_block.difficulty == last_block.difficulty + 1
+
+
+def test_slowly_mined_block():
+    last_block = Block.mine(GENESIS_BLOCK, "foo")
+    time.sleep(MINE_RATE / SECONDS)
+    mined_block = Block.mine(last_block, "bar")
+
+    assert mined_block.difficulty == last_block.difficulty - 1
+
+
+def test_mined_block_difficulty_limits_at_1():
+    last_block = Block(
+        time.time_ns(),
+        "test_last_hash",
+        "test_data",
+        "test_hash",
+        1,
+        0
+    )
+
+    time.sleep(MINE_RATE / SECONDS)
+    mined_block = Block.mine(last_block, "bar")
+
+    assert mined_block.difficulty == 1

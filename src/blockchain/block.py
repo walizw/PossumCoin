@@ -1,4 +1,5 @@
 from ..crypto import crypto_hash
+from src.config import MINE_RATE
 
 import time
 
@@ -16,17 +17,28 @@ class Block:
     def mine(last_block, data):
         timestamp = time.time_ns()
         previous_hash = last_block.hash
-        difficulty = last_block.difficulty
+        difficulty = Block.adjust_diff(last_block, timestamp)
         nonce = 0
         hash = crypto_hash(timestamp, previous_hash, data, difficulty, nonce)
 
         while hash[0:difficulty] != '0' * difficulty:
             nonce += 1
             timestamp = time.time_ns()
+            difficulty = Block.adjust_diff(last_block, timestamp)
             hash = crypto_hash(timestamp, previous_hash,
                                data, difficulty, nonce)
 
         return Block(timestamp, previous_hash, data, hash, difficulty, nonce)
+
+    @staticmethod
+    def adjust_diff(last_block: int, new_timestamp: int) -> int:
+        if (new_timestamp - last_block.timestamp) < MINE_RATE:
+            return last_block.difficulty + 1
+
+        if (last_block.difficulty - 1) > 0:
+            return last_block.difficulty - 1
+
+        return 1
 
     def __repr__(self) -> str:
         return (
@@ -42,7 +54,7 @@ class Block:
 
 
 GENESIS_BLOCK = Block(
-    timestamp="1999-01-01T00:00:00.000000+00:00",
+    timestamp=time.time_ns(),
     previous_hash="",
     data="possums are so cute, and amazing and incredible and i love them so much and i want to hug them and kiss them.",
     hash="POSSUMSLOVER",

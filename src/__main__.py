@@ -1,8 +1,7 @@
 from .blockchain.chain import Chain
 
 chain = Chain()
-chain.add_block("one")
-chain.add_block("two")
-chain.add_block("three")
+for i in range(5):
+    chain.add_block(i)
 
 print(chain)
