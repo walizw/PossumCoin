@@ -113,3 +113,68 @@ def test_chain_add_block():
 
     assert chain.chain[-1].data == data
     assert chain.chain[-1].previous_hash == chain.chain[-2].hash
+
+
+def test_is_valid_chain():
+    chain = Chain()
+    chain.add_block("foo")
+    chain.add_block("bar")
+
+    Chain.is_valid_chain(chain.chain)
+
+
+def test_is_valid_chain_bad_genesis():
+    chain = Chain()
+    chain.chain[0].hash = "bad_hash"
+
+    try:
+        Chain.is_valid_chain(chain.chain)
+        raise Exception("The chain is not valid.")
+    except Exception as e:
+        assert str(e) == "The chain is not valid."
+
+
+def test_replace_chain():
+    chain = Chain()
+    chain.add_block("foo")
+    chain.add_block("bar")
+
+    new_chain = Chain()
+    new_chain.add_block("foo")
+    new_chain.add_block("bar")
+    new_chain.add_block("baz")
+
+    chain.replace_chain(new_chain.chain)
+
+    assert chain.chain == new_chain.chain
+
+
+def test_replace_chain_not_longer():
+    chain = Chain()
+    chain.add_block("foo")
+    chain.add_block("bar")
+
+    new_chain = Chain()
+    new_chain.add_block("foo")
+
+    try:
+        chain.replace_chain(new_chain.chain)
+    except Exception as e:
+        assert str(e) == "Cannot replace. The incoming chain must be longer."
+
+
+def test_replace_chain_bad_chain():
+    chain = Chain()
+    chain.add_block("foo")
+    chain.add_block("bar")
+
+    new_chain = Chain()
+    new_chain.add_block("foo")
+    new_chain.add_block("bar")
+    new_chain.add_block("baz")
+    new_chain.chain[1].hash = "bad_hash"
+
+    try:
+        chain.replace_chain(new_chain.chain)
+    except Exception as e:
+        assert str(e) == "Cannot replace. The incoming chain is invalid."
