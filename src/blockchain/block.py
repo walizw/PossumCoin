@@ -1,4 +1,4 @@
-from .crypto import crypto_hash
+from ..crypto import crypto_hash
 
 import datetime
 

@@ -1,4 +1,4 @@
-from .chain import Chain
+from .blockchain.chain import Chain
 
 chain = Chain()
 chain.add_block("one")
