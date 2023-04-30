@@ -1,7 +1,16 @@
 from .blockchain.chain import Chain
 
-chain = Chain()
-for i in range(2):
-    chain.add_block(i)
+import readline
 
-print(chain)
+readline.parse_and_bind("tab: complete")
+readline.parse_and_bind("set editing-mode emacs")
+
+while True:
+    line = input(">>> ")
+    if line == "exit":
+        break
+    elif line == "help":
+        print("\t\t> PossumCoin <\n")
+        print("Commands:")
+        print("- help: show this screen")
+        print("- exit: exits the program")
