@@ -1,4 +1,4 @@
-from ..crypto import crypto_hash
+from ..crypto import crypto_hash, hex_to_binary
 from src.config import MINE_RATE
 
 import time
@@ -21,7 +21,7 @@ class Block:
         nonce = 0
         hash = crypto_hash(timestamp, previous_hash, data, difficulty, nonce)
 
-        while hash[0:difficulty] != '0' * difficulty:
+        while hex_to_binary(hash)[0:difficulty] != '0' * difficulty:
             nonce += 1
             timestamp = time.time_ns()
             difficulty = Block.adjust_diff(last_block, timestamp)

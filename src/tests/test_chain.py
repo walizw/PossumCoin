@@ -1,5 +1,6 @@
 from src.blockchain import Chain, Block, GENESIS_BLOCK
 from src.config import MINE_RATE, SECONDS
+from src.crypto import hex_to_binary
 
 import time
 
@@ -12,7 +13,8 @@ def test_block_mine():
     assert isinstance(block, Block)
     assert block.data == data
     assert block.previous_hash == last_block.hash
-    assert block.hash[0:block.difficulty] == '0' * block.difficulty
+    assert hex_to_binary(block.hash)[
+        0:block.difficulty] == '0' * block.difficulty
 
 
 def test_chain_instance():
