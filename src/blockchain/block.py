@@ -2,6 +2,7 @@ from ..crypto import crypto_hash, hex_to_binary
 from src.config import MINE_RATE
 
 import time
+import json
 
 
 class Block:
@@ -63,6 +64,13 @@ class Block:
             raise Exception("The block hash must be correct.")
 
         return True
+
+    def to_json(self) -> dict:
+        return json.dumps(self.__dict__)
+
+    @staticmethod
+    def from_json(json_block: dict):
+        return Block(**json_block)
 
     def __repr__(self) -> str:
         return (
